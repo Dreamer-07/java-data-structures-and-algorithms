@@ -14,7 +14,9 @@ public class Algorithm {
     public static void main(String[] args) {
         int[] arr = {4, 7, 3, 8, 19, 1};
         //selectionSort(arr);
-        bubbleSort(arr);
+        //bubbleSort(arr);
+        insertionSort(arr);
+        System.out.println(Arrays.toString(arr));
     }
 
     /**
@@ -35,7 +37,6 @@ public class Algorithm {
             // 交换两个元素
             swap(arr, i, minIndex);
         }
-        System.out.println(Arrays.toString(arr));
     }
 
     /**
@@ -56,6 +57,23 @@ public class Algorithm {
             }
         }
         System.out.println(Arrays.toString(arr));
+    }
+
+
+    /**
+     * 插入排序：
+     * 时间复杂度：O(n ^ 2)
+     * 空间复杂度：O(1)
+     * @param arr
+     */
+    public static void insertionSort(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            // arr[j] > arr[j + 1]: 如果前一个元素大于当前元素才进行交换，
+            // 但又因为前面的元素已经是排好序的了，所以如果当前元素大于前一个元素时就没必要遍历了，因为 arr[j] 一定大于 arr[j - n]
+            for (int j = i - 1; j >= 0 && arr[j] > arr[j + 1]; j--) {
+                swap(arr, j, j + 1);
+            }
+        }
     }
 
     /**
