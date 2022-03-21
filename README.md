@@ -161,7 +161,7 @@ public static void insertionSort(int[] arr) {
 }
 ```
 
-### 二叉查找
+### 二分查找
 
 思想：
 
@@ -190,6 +190,151 @@ log_ba > d 时，时间复杂度为：O(N ^ {log_ba})\\
 log_ba = d 时，时间复杂度为：O(N ^ d * log_2N)
 $$
 
+### 归并排序
+
+思路：
+
+- 先使每个子序列有序，再使子序列段间有序。 若将两个有序表合并成一个有序表，也可以称为二路归并
+- 如何将两个有序表合并成一个有序表？
+  1. 创建一个空数组 temp 暂时保存有序的数据
+  2. 依次遍历两个有序集合，定义两个索引，依次遍历对比，只有元素小的数据才能先放到 temp 中然后对应的索引才可以 ++，直到将其中一个有序集合全部遍历
+  3. 将剩下的那个有序集合中剩下的元素直接保存到 temp 中
+  4. 将 temp 中的元素按一定顺序拷贝到原数组中
+
+代码：
+
+```java
+/**
+* 归并排序：
+* 时间复杂度：O(N *  logN)
+* 空间复杂度：O(N)
+* @param arr
+*/
+public static void mergeSort(int[] arr, int l, int r) {
+    // 如果 l == r 就直接返回
+    if (l == r) {
+        return;
+    }
+    // 获取中位数
+    int mid = l + ((r - l) >> 1);
+    // 先使左右两个子序列有序
+    mergeSort(arr, l, mid);
+    mergeSort(arr, mid + 1, r);
+    // 使子序列段间
+    merge(arr, l, mid, r);
+}
+
+/**
+* 归并排序的核心：将两个有序的子序列的合并成一个有序的子序列段
+* @param arr
+* @param l
+* @param m
+* @param r
+*/
+private static void merge(int[] arr, int l, int m, int r) {
+    // 初始化辅助空间
+    int[] tempArr = new int[r - l + 1];
+    /*
+    * 定义两个下标，依次从左往右比较两个数组中的元素，哪个小就放到 tempArr 中，然后对应的索引就 +1
+    * */
+    int tempIdx = 0;
+    int lIdx = l;
+    int rIdx = m + 1;
+    while (lIdx <= m && rIdx <= r) {
+        tempArr[tempIdx++] = arr[lIdx] < arr[rIdx] ? arr[lIdx++] : arr[rIdx++];
+    }
+    while (lIdx <= m) {
+        tempArr[tempIdx++] = arr[lIdx++];
+    }
+    while (rIdx <= r) {
+        tempArr[tempIdx++] = arr[rIdx++];
+    }
+    // 最后将 tempArr 的元素拷贝给 arr 即可
+    for (int i = 0; i < tempArr.length; i++ ) {
+        arr[l + i] = tempArr[i];
+    }
+}
+```
+
+### 快速排序
+
+思想：
+
+- 快排分为三个版本，但原理都差不多
+- 主要步骤：
+  1. **先从数组中选择一个数 num**，如何将数组划分成左边是**小于等于 num 的数**，而右边是**大于 num 的数**
+  2. 然后再将左边和右边的数组(不包括 num)放到递归中重复以上操作
+- 版本区别
+  - 1.0 版本就是主要步骤中所描述的，时间复杂度为 O(N ^ 2)
+  - 2.0 版本是将 数组左边只保存小于 num 的数，中间放等于 num 的数，右边是大于 num 的数；递归时数组中间并不参与，时间复杂度为 O(N ^ 2)
+  - 3.0 版本是在 2.0 的版本的基础上，改变了选择了 num 的方式；此前 1/2 版本中都是选择最左边的数作为 num，而 3 版本是**随机选择**的; 时间复杂度为 O(N * logN)
+
+代码：
+
+```java
+/**
+* 快速排序(v3)：
+* 时间复杂度：O(N * logN)
+* 空间复杂度：
+*  - 最好：O(logN)
+*  - 最坏：O(N)
+* @param arr
+* @param l
+* @param r
+*/
+public static void quickerSort(int[] arr, int l, int r) {
+    if (l < r) {
+        // 随机选择一个下标的元素作为 num
+        int numIdx = l +  (int) (Math.random() * (r - l + 1));
+        // 将 numIdx 下标的元素放到数组最左边方便计算
+        swap(arr, numIdx, r);
+        // 由 partition 函数决定左右两个数组的边界，并保证中间数据和 numIdx 下标的数据相同
+        int[] p = partition(arr, l , r);
+        // p 中保存了两个元素，方便对应的中间数组(等于num)的两个边界
+        quickerSort(arr, l, p[0] - 1);
+        quickerSort(arr, p[1] + 1, r);
+    };
+}
+
+private static int[] partition(int[] arr, int l, int r) {
+    // less 表示左区域(比 num 小)边界的下一个数，也就是中间区域的最左边
+    int less = l;
+    // more 表示右区域(比 num 大)边界的前一个数，也就是中间区域的最右边
+    int more = r - 1;
+    // i 指向需要判断的数据的下标
+    int i = l;
+    // 当判断的数据已经到了右边区域内部时就不用判断了
+    while (i <= more) {
+        if (arr[i] < arr[r]) {
+            // 如果当前数据比 num 小，就放到左区域，并把它的 边界++ => 也就是 less++
+            swap(arr, i++, less++);
+        } else if(arr[i] > arr[r]) {
+            // 如果当先数据比 num 大，就放到右区域，并把它的 边界-- => 也就是 more--
+            // 注意，这里 i 不要 ++，因为换过来的数是右区域(比 num 大)边界的前一个数，并不是右区域内部的数，即还未判断的数
+            swap(arr, more--, i);
+        } else {
+            // 如果相同就代表是中间区域的，判断下一个数据即可
+            i++;
+        }
+    }
+    // 最后 i > more，i 处于右区域的左边界，所以让它和 num 下标 r 进行一个交换
+    /*        less more
+    * [1,  2,  3 ,  3,  7 , 5 , 3]
+    *                   i       r
+    * 交换之后
+    *        less  more
+    * [1,  2,  3 ,  3,  3 , 5 , 7]
+    *                   i       r
+    * */
+    swap(arr, i, r);
+    // 返回边界，这里的 i 也可以换成 more + 1
+    return new int[]{less, i};
+}
+```
+
+
+
+### 堆
 
 ## 解题技巧
 
