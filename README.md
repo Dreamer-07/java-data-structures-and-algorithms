@@ -8,7 +8,7 @@
 
 > 时间复杂度
 
-简单理解：本次操作中常数操作的时间
+简单理解：本次操作中常数操作的总时间
 
 - 常数操作：和**数据量无关**，是一个**固定时间**的操作，例如 数组寻址/加减乘除等等
 
@@ -55,7 +55,7 @@
 ### 算法好坏的指标
 
 1. 判断一个算法的好坏，优先看它的**时间复杂度**，一般越小越好，表示在遇到大数据量的情况下时，该算法所消耗的时间更少
-2. 如果两个算法的时间复杂度相同，就需要观察它们的**常数项**，但注意 - 常数项表示的是常数操作，但不同类型的常数操作消耗的时间是不同的(例如一个进行了 10 次乘法运算，一个进行了 100 次位运算); 一般这种情况下就是**上代码**分析不同数据样本下的实际运行时间，这种测试又称为 **常数项时间**
+2. 如果两个算法的时间复杂度相同，就需要观察它们的**常数项**，但注意 - 常数项表示的是常数操作，但不同类型的常数操作消耗的时间是不同的(例如一个进行了 10 次乘法运算，一个进行了 100 次位运算); 一般这种情况下就是**上代码**分析不同数据样本下的实际运行时间，这种测试又称为**常数项时间**
 
 ### 选择排序
 
@@ -336,6 +336,224 @@ private static int[] partition(int[] arr, int l, int r) {
 
 ### 堆
 
+> 堆结构
+
+- 从逻辑上可以理解为堆是一颗 **完全二叉树**(不懂得可以百度下，很简单理解di)
+
+- 可以用一个数组连续的 heapSize 个元素表示堆(完全二叉树)
+
+  ```
+  在这连续的 heapSize 个元素中，每个元素都满足一下规律
+  父元素   == i / 2 - 1
+  左子元素 == i * 2 + 1
+  右子元素 == i * 2 + 2
+  ```
+
+- 分类
+
+  - 大根堆：在完全二叉树种，以 任意一个节点 作为 头节点 都是 **对应子树的最大值**
+- 小根堆：在完全二叉树种，以 任意一个节点 作为 头节点 都是 **对应子树的最小值**
+
+> 堆结构相关算法的核心
+
+- `heapInsert`：将数组变成一个大根堆
+
+  让元素和它的父元素进行对比，如果比它大就交换到上一层去
+
+  ```java
+  /**
+  * heapInsert 调整数组中的元素，使其符合大根堆的规则
+  * @param arr
+  * @param index
+  */
+  private static void heapInsert(int[] arr, int index) {
+      while (arr[index] > arr[(index - 1) / 2]){
+          swap(arr, index, (index - 1) / 2);
+          index = (index - 1) / 2;
+      }
+  }
+  ```
+
+- `heapify`: 重新调整数组结构,保证其符合堆的特点
+
+  从 index 开始调整子树让其符合大根堆的结构
+
+  ```java
+  /**
+  * heapIfy 从 index 开始重新调整大根堆的结构
+  * @param arr
+  * @param index
+  * @param heapSize
+  */
+  private static void heapIfy(int[] arr, int index, int heapSize) {
+      int left = index * 2 + 1;
+      // 保证操作的元素是在大根堆中的
+      while (left < heapSize) {
+          // 求出两个子元素的之间的最大值
+          int largest  = left + 1 < heapSize && arr[left] < arr[left + 1] ? left + 1 : left;
+          // 与当前元素进行一个对比
+          if (arr[index] >= arr[largest]) {
+              // 如果当前元素符合大根堆的结构就不需要调整
+              break;
+          }
+          swap(arr, index, largest);
+          index = largest;
+          left = index * 2 + 1;
+      }
+  }
+  ```
+
+> 堆排序
+
+思想：
+
+- 先将数组调整至大根堆的结构(heapInsert)
+- 将数组的第一个元素和 heapSize 的最后一个元素交换，然后 `heapSize--`(表示数组中从0开始一共有几个元素是堆结构)，然后对第一个元素进行 `heapIfy` 操作，依次类推，直到 heapSize == 0
+
+代码：
+
+```java
+/**
+* 堆排序：
+* 时间复杂度：O(N * logN)
+*  注意：在堆排序中的 1. 无论使用 1.2 / 1.1 都不影响堆排序的时间复杂度，因为最后都会进行一个 O(N * logN) 的运算
+*       但如果只要求将一个数组变成一个大根堆，推荐使用 1.2 heapIfy
+* 空间复杂度：O(1)
+*
+* @param arr
+*/
+public static void heapSort(int[] arr) {
+    int heapSize = 0;
+    // 1. 将数组变成一个大根堆
+    // 1.1 方法一：通过 heapInsert; 时间复杂度：O(N * logN)
+    //        for (int i = 0; i < arr.length; i++) {
+    //            heapInsert(arr, i);
+    //        }
+    //         1.2 方法二：通过 heapIfy; 时间复杂度：O(N)
+    for (int j = arr.length; j >= 0; j--) {
+        heapIfy(arr, j, arr.length);
+    }
+    heapSize = arr.length;
+
+    // 2. 将数组中 heapSize 的最后一个元素和第一个元素交换
+    // 时间复杂度：O(N)
+    while (heapSize > 0) {
+        // O(1)
+        swap(arr, 0, heapSize - 1);
+        // O(logN)
+        heapIfy(arr, 0, --heapSize);
+    }
+}
+```
+
+> 注意
+
+1. 优先级队列的底层就是堆结构，例如 Java 中的 **PriorityQueue\<Integer>**(小根堆)
+2. 由于堆使用的数组，可能会存在**扩容**问题，但一般影响不大，扩展的时间复杂度为 **O(logN)**
+3. 如果是使用系统提供的优先级队列，如果只需要进行**存储获取**(保存一个数，获取一个数)的操作可以使用，但如果**想可以随意的修改堆中的数据，建议手写堆结构**
+
+### 计数排序和基数排序
+
+> 与上述的所有排序(选择，冒泡，插入，归并，快速，堆)都不同，它们都是基于比较的排序(计数和基数不是)
+
+计数排序：
+
+- 时间复杂度：O(N)；空间复杂度：O(N)
+- 特点：
+  1. 输入的数据必须是有确定范围的整数
+  2. 计数排序只能用在**数据范围不大的场景**中，如果数据范围 k 比要排序的数据 n 大很多，就不适合用计数排序了。而且，计数排序只能给非负整数排序，如果要排序的数据是其他类型的，要将其在不改变相对大小的情况下，转化为非负整数。
+- 主要思想：使用一个额外数组，该数组负责记录对应下标的数据出现的次数(例如数据为 17 那么额外数组下标为 17 的数据就 + 1)，通过这个次数，我们就可以知道元素在有序数组中的位置
+
+基数排序(又称为**桶排序**)：
+
+- 时间复杂度：O(N); 空间复杂度：O(N + m)
+
+- 特点：
+
+  1. 需要分割出独立的"位"来比较，而且位之间可以进行比较。
+  2. 每一位的数据范围不能太大，要可以用线性排序算法来排序，否则，基数排序的时间复杂度就无法做到 O(n)。
+  3. 如果排序的元素位数不一样，位数不够的可以在后面补位。
+
+- 主要思想：根据每个数的各个位数进行排序。先根据个位数排序，再根据十位数排序，以此类推，最后根据最高位。
+
+- 代码：
+
+  ```java
+  /**
+   * 基数排序
+   *
+   * @param arr
+   */
+  public static void radixSort(int[] arr, int maxBits) {
+      // 表示桶的个数
+      final int radix = 10;
+  
+      // 进行 maxBits 次出入桶操作
+      for (int i = 1; i <= maxBits; i++) {
+          int[] count = new int[radix];
+          // 标记不同数据在同一"位"上的个数并记录起来
+          for (int num : arr) {
+              // 求出当前 arr[j] 从左到右的第 i 位上的数据
+              int digit = getDigit(num, i);
+              // 对应的标记的数量++
+              count[digit]++;
+          }
+          /*
+               * 从左到右左前缀相加
+               * */
+          for (int k = 1; k < count.length; k++) {
+              count[k] += count[k - 1];
+          }
+          /*
+               * 从左到右到依次将桶里的数据"倒出来"
+               * */
+          int[] temp = new int[arr.length];
+          for (int a = arr.length - 1; a >= 0; a--) {
+              // 求出当前 arr[j] 从左到右的第 i 位上的数据
+              int digit = getDigit(arr[a], i);
+              // 将桶里的数据"倒出来"保存到 temp 数组中
+              temp[count[digit] - 1] = arr[a];
+              count[digit]--;
+          }
+          // 将出桶数据保存到 arr 中
+          System.arraycopy(temp, 0, arr, 0, temp.length);
+      }
+  }
+  
+  /**
+   * 求出数组中元素的最大“位”数
+   *
+   * @param arr
+   * @return
+   */
+  private static int maxBits(int[] arr) {
+      int max = Integer.MIN_VALUE;
+      for (int i = 0; i < arr.length; i++) {
+          max = Math.max(max, arr[i]);
+      }
+      int res = 0;
+      while (max != 0) {
+          res++;
+          // 每除于10就表示有1位；res++
+          max /= 10;
+      }
+      return res;
+  }
+  
+  /**
+   * 获取 x 从左到右的第 d 位数
+   *
+   * @param x
+   * @param d
+   * @return
+   */
+  private static int getDigit(int x, int d) {
+      return ((x / (int) Math.pow(10, d - 1))) % 10;
+  }
+  ```
+
+  
+
 ## 解题技巧
 
 ### 异或运算的性质与扩展
@@ -400,6 +618,46 @@ public static boolean isEqual(int[] arr1, int[] arr2)
 }
 ```
 
+### 比较器
+
+使用：
+
+1. 比较器的实质就是重载比较运算符
+2. 可以用在需要按照特殊排序规则的 算法/结构 上
+
+java 实现：
+
+```java
+/**
+ * 比较器：可以通过按照特定规则进行排序
+ * @author 23911
+ * @version 1.0
+ * @date 2022/3/25 16:19
+ */
+public class Comparators implements Comparator<Integer> {
+
+    /**
+     * 比较两个参数的方法
+     *  规则：
+     *      当返回值 < 0 时，o1 在前面，o2 在后面
+     *      当返回值 > 0 时，o1 在后面，o2 在前面
+     *      当返回值 = 0 时，都可以
+     *  技巧：
+     *      降序：{@code return o1 - o2}
+     *      升序：{@code return o2 - o1}
+     * @author 23911
+     * @date 2022/3/25 16:21
+     */
+    @Override
+    public int compare(Integer o1, Integer o2) {
+        return o2 - o1;
+    }
+
+}
+```
+
+注意：`compare` 方法的两个参数类型是根据实现 **Comparator** 接口时定义的泛型而定的
+
 ### 求中位数
 
 - 一般的写法：mid = (l + r) / 2
@@ -411,3 +669,5 @@ public static boolean isEqual(int[] arr1, int[] arr2)
   因为用的是减法，不会导致 **整型溢出**
 
 - 究极简化版：mid = l + ((r - l) >> 1)
+
+### 

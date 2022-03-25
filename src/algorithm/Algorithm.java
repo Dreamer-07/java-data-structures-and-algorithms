@@ -1,6 +1,5 @@
 package algorithm;
 
-import java.sql.Array;
 import java.util.Arrays;
 
 /**
@@ -14,12 +13,22 @@ import java.util.Arrays;
 public class Algorithm {
 
     public static void main(String[] args) {
-        int[] arr = {4, 7, 3, 8, 19, 1, 999, -1};
-        //selectionSort(arr);
-        //bubbleSort(arr);
-        //insertionSort(arr);
-        //mergeSort(arr, 0, arr.length - 1);
-        quickerSort(arr, 0, arr.length - 1);
+        int[] arr = {4, 7, 3, 8, 19, 1, 999, 30};
+
+        // selectionSort(arr);
+
+        // bubbleSort(arr);
+
+        // insertionSort(arr);
+
+        // mergeSort(arr, 0, arr.length - 1);
+
+        // quickerSort(arr, 0, arr.length - 1);
+
+        // heapSort(arr);
+
+        radixSort(arr, maxBits(arr));
+
         System.out.println(Arrays.toString(arr));
     }
 
@@ -86,6 +95,7 @@ public class Algorithm {
      * 归并排序：
      * 时间复杂度：O(N * logN)
      * 空间复杂度：O(N)
+     *
      * @param arr
      */
     public static void mergeSort(int[] arr, int l, int r) {
@@ -104,6 +114,7 @@ public class Algorithm {
 
     /**
      * 归并排序的核心：将两个有序的子序列的合并成一个有序的子序列段
+     *
      * @param arr
      * @param l
      * @param m
@@ -128,7 +139,7 @@ public class Algorithm {
             tempArr[tempIdx++] = arr[rIdx++];
         }
         // 最后将 tempArr 的元素从 l 开始到 r 复制给 arr 即可
-        for (int i = 0; i < tempArr.length; i++ ) {
+        for (int i = 0; i < tempArr.length; i++) {
             arr[l + i] = tempArr[i];
         }
     }
@@ -137,8 +148,9 @@ public class Algorithm {
      * 快速排序(v3)：
      * 时间复杂度：O(N * logN)
      * 空间复杂度：
-     *  - 最好：O(logN)
-     *  - 最坏：O(N)
+     * - 最好：O(logN)
+     * - 最坏：O(N)
+     *
      * @param arr
      * @param l
      * @param r
@@ -146,19 +158,21 @@ public class Algorithm {
     public static void quickerSort(int[] arr, int l, int r) {
         if (l < r) {
             // 随机选择一个下标的元素作为 num
-            int numIdx = l +  (int) (Math.random() * (r - l + 1));
+            int numIdx = l + (int) (Math.random() * (r - l + 1));
             // 将 numIdx 下标的元素放到数组最左边方便计算
             swap(arr, numIdx, r);
             // 由 partition 函数决定左右两个数组的边界，并保证中间数据和 numIdx 下标的数据相同
-            int[] p = partition(arr, l , r);
+            int[] p = partition(arr, l, r);
             // p 中保存了两个元素，方便对应的中间数组(等于num)的两个边界
             quickerSort(arr, l, p[0] - 1);
             quickerSort(arr, p[1] + 1, r);
-        };
+        }
+        ;
     }
 
     /**
      * 快速排序的核心：将 arr[] 中 l~r 中的数据化成为 [小于 arr[r] 的数据, 等于 arr[r] 的数据，大于 arr[r] 的数据]
+     *
      * @param arr
      * @param l
      * @param r
@@ -176,7 +190,7 @@ public class Algorithm {
             if (arr[i] < arr[r]) {
                 // 如果当前数据比 num 小，就放到左区域，并把它的 边界++ => 也就是 less++
                 swap(arr, i++, less++);
-            } else if(arr[i] > arr[r]) {
+            } else if (arr[i] > arr[r]) {
                 // 如果当先数据比 num 大，就放到右区域，并把它的 边界-- => 也就是 more--
                 // 注意，这里 i 不要 ++，因为换过来的数是右区域(比 num 大)边界的前一个数，并不是右区域内部的数，即还未判断的数
                 swap(arr, more--, i);
@@ -187,16 +201,157 @@ public class Algorithm {
         }
         // 最后 i > more，i 处于右区域的左边界，所以让它和 num 下标 r 进行一个交换
         /*        less more
-        * [1,  2,  3 ,  3,  7 , 5 , 3]
-        *                   i       r
-        * 交换之后
-        *        less  more
-        * [1,  2,  3 ,  3,  3 , 5 , 7]
-        *                   i       r
-        * */
+         * [1,  2,  3 ,  3,  7 , 5 , 3]
+         *                   i       r
+         * 交换之后
+         *        less  more
+         * [1,  2,  3 ,  3,  3 , 5 , 7]
+         *                   i       r
+         * */
         swap(arr, i, r);
         // 返回边界，这里的 i 也可以换成 more + 1
         return new int[]{less, i};
+    }
+
+    /**
+     * 堆排序：
+     * 时间复杂度：O(N * logN)
+     * 注意：在堆排序中的 1. 无论使用 1.2 / 1.1 都不影响堆排序的时间复杂度，因为最后都会进行一个 O(N * logN) 的运算
+     * 但如果只要求将一个数组变成一个大根堆，推荐使用 1.2 heapIfy
+     * 空间复杂度：O(1)
+     *
+     * @param arr
+     */
+    public static void heapSort(int[] arr) {
+        int heapSize = 0;
+        // 1. 将数组变成一个大根堆
+        // 1.1 方法一：通过 heapInsert; 时间复杂度：O(N * logN)
+//        for (int i = 0; i < arr.length; i++) {
+//            heapInsert(arr, i);
+//        }
+//         1.2 方法二：通过 heapIfy; 时间复杂度：O(N)
+        for (int j = arr.length; j >= 0; j--) {
+            heapIfy(arr, j, arr.length);
+        }
+        heapSize = arr.length;
+
+        // 2. 将数组中 heapSize 的最后一个元素和第一个元素交换
+        // 时间复杂度：O(N)
+        while (heapSize > 0) {
+            // O(1)
+            swap(arr, 0, heapSize - 1);
+            // O(logN)
+            heapIfy(arr, 0, --heapSize);
+        }
+    }
+
+    /**
+     * heapInsert 调整数组中的元素，使其符合大根堆的规则
+     *
+     * @param arr
+     * @param index
+     */
+    private static void heapInsert(int[] arr, int index) {
+        while (arr[index] > arr[(index - 1) / 2]) {
+            swap(arr, index, (index - 1) / 2);
+            index = (index - 1) / 2;
+        }
+    }
+
+    /**
+     * heapIfy 从 index 开始重新调整大根堆的结构
+     *
+     * @param arr
+     * @param index
+     * @param heapSize
+     */
+    private static void heapIfy(int[] arr, int index, int heapSize) {
+        int left = index * 2 + 1;
+        // 保证操作的元素是在大根堆中的
+        while (left < heapSize) {
+            // 求出两个子元素的之间的最大值
+            int largest = left + 1 < heapSize && arr[left] < arr[left + 1] ? left + 1 : left;
+            // 与当前元素进行一个对比
+            if (arr[index] >= arr[largest]) {
+                // 如果当前元素符合大根堆的结构就不需要调整
+                break;
+            }
+            swap(arr, index, largest);
+            index = largest;
+            left = index * 2 + 1;
+        }
+    }
+
+    /**
+     * 基数排序
+     *
+     * @param arr
+     */
+    public static void radixSort(int[] arr, int maxBits) {
+        // 表示桶的个数
+        final int radix = 10;
+
+        // 进行 maxBits 次出入桶操作
+        for (int i = 1; i <= maxBits; i++) {
+            int[] count = new int[radix];
+            // 标记不同数据在同一"位"上的个数并记录起来
+            for (int num : arr) {
+                // 求出当前 arr[j] 从左到右的第 i 位上的数据
+                int digit = getDigit(num, i);
+                // 对应的标记的数量++
+                count[digit]++;
+            }
+            /*
+             * 从左到右左前缀相加
+             * */
+            for (int k = 1; k < count.length; k++) {
+                count[k] += count[k - 1];
+            }
+            /*
+             * 从左到右到依次将桶里的数据"倒出来"
+             * */
+            int[] temp = new int[arr.length];
+            for (int a = arr.length - 1; a >= 0; a--) {
+                // 求出当前 arr[j] 从左到右的第 i 位上的数据
+                int digit = getDigit(arr[a], i);
+                // 将桶里的数据"倒出来"保存到 temp 数组中
+                temp[count[digit] - 1] = arr[a];
+                count[digit]--;
+            }
+            // 将出桶数据保存到 arr 中
+            System.arraycopy(temp, 0, arr, 0, temp.length);
+        }
+    }
+
+    /**
+     * 求出数组中元素的最大“位”数
+     *
+     * @param arr
+     * @return
+     */
+    private static int maxBits(int[] arr) {
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < arr.length; i++) {
+            max = Math.max(max, arr[i]);
+        }
+        int res = 0;
+        while (max != 0) {
+            res++;
+            // 每除于10就表示有1位；res++
+            max /= 10;
+        }
+        return res;
+    }
+
+    /**
+     * 获取 x 从左到右的第 d 位数
+     *
+     * @param x
+     * @param d
+     * @return
+     */
+    private static int getDigit(int x, int d) {
+        return ((x / (int) Math.pow(10, d - 1))) % 10;
     }
 
     /**
