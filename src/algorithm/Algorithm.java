@@ -157,6 +157,13 @@ public class Algorithm {
      */
     public static void quickerSort(int[] arr, int l, int r) {
         if (l < r) {
+
+            if (r - l > 60) {
+                // 可以在样本数量小于 60 时使用快速排序
+                quickerSort(arr, l, r);
+                return;
+            }
+
             // 随机选择一个下标的元素作为 num
             int numIdx = l + (int) (Math.random() * (r - l + 1));
             // 将 numIdx 下标的元素放到数组最左边方便计算
@@ -166,8 +173,8 @@ public class Algorithm {
             // p 中保存了两个元素，方便对应的中间数组(等于num)的两个边界
             quickerSort(arr, l, p[0] - 1);
             quickerSort(arr, p[1] + 1, r);
+
         }
-        ;
     }
 
     /**
