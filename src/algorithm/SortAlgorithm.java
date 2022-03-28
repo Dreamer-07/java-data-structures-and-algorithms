@@ -3,14 +3,14 @@ package algorithm;
 import java.util.Arrays;
 
 /**
- * 算法类
+ * 排序算法
  *
  * @author by Prover07
- * @classname Algorithm
+ * @classname SortAlgorithm
  * @description TODO
  * @date 2022/3/11 22:21
  */
-public class Algorithm {
+public class SortAlgorithm {
 
     public static void main(String[] args) {
         int[] arr = {4, 7, 3, 8, 19, 1, 999, 30};

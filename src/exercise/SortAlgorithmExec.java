@@ -3,17 +3,17 @@ package exercise;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * 排序算法练习
  * @author by Prover07
  * @classname Class01
  * @description TODO
  * @date 2022/3/12 9:26
  */
-public class Algorithm {
+public class SortAlgorithmExec {
 
 
     public static void main(String[] args) {

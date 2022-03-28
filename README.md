@@ -640,6 +640,271 @@ public static void heapSort(int[] arr) {
 
   ![image-20220326132335544](README.assets/image-20220326132335544.png)
 
+### 二叉树
+
+> 递归序：依次访问树的左右节点
+
+```java
+public static class TreeNode {
+    int value;
+    TreeNode left;
+    TreeNode right;
+
+    public TreeNode(int value) {
+        this.value = value;
+    }
+}
+
+/**
+* 递归序
+*/
+public static void recursion(TreeNode root) {
+    if (root == null) {
+        return;
+    }
+    // 1
+    recursion(root.left);
+    // 2
+    recursion(root.right);
+    // 3.
+}
+```
+
+> 递归实现先序/中序/后序遍历：在递归序的基础上实现用不同顺序的访问树的节点
+
+注意在 **递归序** 中留下注释的地方，在这些地方分别访问当前 `root` 节点，就是对应的 **先序/中序/后序遍历**
+
+```java
+/**
+* 先序遍历
+* @param root
+*/
+public static void preOrder(TreeNode root) {
+    if (root == null) {
+        return;
+    }
+    // 访问当前节点
+    System.out.println(root.value);
+    preOrder(root.left);
+    preOrder(root.right);
+}
+
+/**
+ * 中序遍历
+ * @param root
+ */
+public static void midOrder(TreeNode root) {
+    if (root == null) {
+        return;
+    }
+    midOrder(root.left);
+    // 访问当前节点
+    System.out.println(root.value);
+    midOrder(root.right);
+}
+
+/**
+* 后序遍历
+* @param root
+*/
+public static void postOrder(TreeNode root) {
+    if (root == null) {
+        return;
+    }
+    postOrder(root.left);
+    postOrder(root.right);
+    // 访问当前节点
+    System.out.println(root.value);
+}
+```
+
+> 非递归实现先序/中序/后序遍历: 借助额外数据结构实现
+
+先序遍历
+
+```java
+/**
+* 非递归实现先序遍历
+* @param root
+*/
+public static void unRecurPreOrder(TreeNode root) {
+    // 使用栈实现
+    Stack<TreeNode> stack = new Stack<>();
+    stack.push(root);
+    while (!stack.isEmpty()) {
+        TreeNode treeNode = stack.pop();
+        System.out.println(treeNode.value);
+        if (treeNode.right != null) {
+            stack.push(treeNode.right);
+        }
+        if (treeNode.left != null) {
+            stack.push(treeNode.left);
+        }
+    }
+}
+```
+
+中序遍历
+
+```java
+/**
+* 非递归实现中序遍历
+*
+* @param root
+*/
+public static void unRecurMidOrder(TreeNode root) {
+    // 使用栈实现
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode temp = root;
+    while (!stack.isEmpty() || temp != null) {
+        // 先往左边走，同时将当前节点压入栈中
+        if (temp != null) {
+            stack.push(temp);
+            temp = temp.left;
+        } else {
+            // 左边莫得了, 获取上一个压入栈中的节点
+            temp = stack.pop();
+            // 访问当前节点
+            System.out.println(temp.value);
+            // 访问右边的节点
+            temp = temp.right;
+        }
+    }
+}
+```
+
+后序遍历
+
+```java
+/**
+* 非递归实现后序遍历
+* @param root
+*/
+public static void unRecurPostOrder(TreeNode root) {
+    Stack<TreeNode> stack1 = new Stack<>();
+    Stack<TreeNode> stack2 = new Stack<>();
+    stack1.push(root);
+    while (!stack1.isEmpty()) {
+        TreeNode node = stack1.pop();
+        stack2.push(node);
+        if (node.left != null) {
+            stack1.push(node.left);
+        }
+        if (node.right != null) {
+            stack1.push(node.right);
+        }
+    }
+    while (!stack2.isEmpty()){
+        System.out.println(stack2.pop().value);
+    }
+}
+```
+
+> 宽度优先遍历
+
+```java
+public static void exam01(TreeNode root) {
+    // 在 java 中 LinkedList 就是队列
+    Queue<TreeNode> nodeQueue = new LinkedList<>();
+    nodeQueue.add(root);
+    while (!nodeQueue.isEmpty()) {
+        TreeNode treeNode = nodeQueue.poll();
+        System.out.println(treeNode.value);
+        if (treeNode.left != null) {
+            nodeQueue.add(treeNode.left);
+        }
+        if (treeNode.right != null) {
+            nodeQueue.add(treeNode.right);
+        }
+    }
+}
+```
+
+> 求出二叉树最大宽度(哈希表/不用哈希表)
+
+```java
+/**
+* 求出树的最大宽度(答案1): 求出树的最大宽度
+*
+* @param root
+* @return
+*/
+public static int exam02Answer01(TreeNode root) {
+    HashMap<TreeNode, Integer> levelMap = new HashMap<>();
+    int curLevel = 1;
+    int curCount = 0;
+    int maxCount = Integer.MIN_VALUE;
+    levelMap.put(root, 1);
+    // 在 java 中 LinkedList 就是队列
+    Queue<TreeNode> nodeQueue = new LinkedList<>();
+    nodeQueue.add(root);
+    while (!nodeQueue.isEmpty()) {
+        TreeNode treeNode = nodeQueue.poll();
+        Integer level = levelMap.get(treeNode);
+        if (level == curLevel) {
+            curCount++;
+        } else {
+            maxCount = Math.max(maxCount, curCount);
+            curCount = 1;
+            curLevel++;
+        }
+        if (treeNode.left != null) {
+            nodeQueue.add(treeNode.left);
+            levelMap.put(treeNode.left, curLevel + 1);
+        }
+        if (treeNode.right != null) {
+            nodeQueue.add(treeNode.right);
+            levelMap.put(treeNode.right, curLevel + 1);
+        }
+
+    }
+    return maxCount;
+}
+
+/**
+* 求出树的最大宽度(答案2)：求出树的最大宽度
+*
+* @param root
+* @return
+*/
+public static int exam02Answer02(TreeNode root) {
+    Queue<TreeNode> nodeQueue = new LinkedList<>();
+    nodeQueue.add(root);
+    int curLevel = 1;
+    int curCount = 0;
+    int maxCount = Integer.MIN_VALUE;
+    // 当前层(curLevel)的最后一个节点
+    TreeNode curLevelEndTreeNode = root;
+    // 下一层的最后一个节点
+    TreeNode nextLevelEndTreNode = null;
+    while (!nodeQueue.isEmpty()) {
+        TreeNode treeNode = nodeQueue.poll();
+
+        if (treeNode.left != null) {
+            nodeQueue.add(treeNode.left);
+            nextLevelEndTreNode = treeNode.left;
+        }
+        if (treeNode.right != null) {
+            nodeQueue.add(treeNode.right);
+            nextLevelEndTreNode = treeNode.right;
+        }
+
+        if (treeNode == curLevelEndTreeNode) {
+            maxCount = Math.max(++curCount, maxCount);
+            curLevel++;
+            curCount = 0;
+            curLevelEndTreeNode = nextLevelEndTreNode;
+            nextLevelEndTreNode = null;
+        } else {
+            curCount++;
+        }
+
+
+    }
+    return maxCount;
+}
+```
+
 ## 解题技巧
 
 ### 异或运算的性质与扩展
@@ -767,4 +1032,44 @@ public class Comparators implements Comparator<Integer> {
 
 - 针对**笔试**，使用时间复杂度低的算法即可，不用太在于空间复杂度
 - 针对**面试**，在保证时间复杂度低的同时，尽量减小空间复杂度
+
+#### 回环链表求出回环点
+
+> 规律：在回环链表上使用快慢索引，当快慢索引第一次相遇时，让快索引回到 head 节点，慢索引不动
+>
+> 然后和慢索引同时移动，每次移动一步，当两个节点再次相遇时，就是回环节点
+
+```java
+private static Node isLoop(Node head) {
+    if (head == null || head.next == null || head.next.next == null) {
+        return null;
+    }
+    // 定义快慢指针
+    Node idx1 = head.next;
+    Node idx2 = head.next.next;
+
+    while (idx2 != idx1) {
+        if (idx2.next == null || idx2.next.next == null) {
+            return null;
+        }
+        idx1 = idx1.next;
+        idx2 = idx2.next.next;
+    };
+    // 回环链表不可能遍历完
+    if (idx2 == null) {
+        return null;
+    }
+    idx2 = head;
+    /*
+    * 这里有个规律：
+    * 在回环链表上使用快慢索引，当快慢索引第一次相遇时，此时快索引回到 head 节点，
+    * 和慢索引同时移动，每次移动一步，当两个节点再次相遇时，就是回环节点
+    * */
+    while (idx2 != idx1) {
+        idx1 = idx1.next;
+        idx2 = idx2.next;
+    }
+    return idx1;
+}
+```
 
