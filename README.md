@@ -19,27 +19,31 @@
 2. 第二次排序，由于第一个元素确定了(最小的)，就从下标为 1 的元素开始比较(以此类推); 由此可得第二个元素需要进行 **查找 N - 1 个元素，比较 N -2 次，进行 1 次交换** 的常数操作
 
 3. 第三次排序，同理，第三个元素需要进行 **查找 N - 2 个元素，比较 N - 3 次，进行 1 次交换** 的常数操作
+   
+   最终会进行 **查找 (N) + (N - 1) + (N - 2) ..... (1)，比较 (N-1) + (N - 2) + (N - 3) ..... (1)，进行 N 次交换 ** 的常数操作
 
-4. .... 最终会进行 **查找 (N) + (N - 1) + (N - 2) ..... (1)，比较 (N-1) + (N - 2) + (N - 3) ..... (1)，进行 N 次交换 ** 的常数操作
-
-5. 将三个式子的结果接起来，通过[等差数列](https://www.bilibili.com/video/BV1Bs411573j?spm_id_from=333.337.search-card.all.click)可得最终的**常数操作数量**为：
+4. 将三个式子的结果接起来，通过[等差数列](https://www.bilibili.com/video/BV1Bs411573j?spm_id_from=333.337.search-card.all.click)可得最终的**常数操作数量**为：
+   
    $$
    aN^2 + bN + C
    $$
 
-6. 此时到了最重要的一步：**化简！！！**
-
+5. 此时到了最重要的一步：**化简！！！**
+   
    - 去掉低阶项，只要最高阶的项，上面的式子可以得到
+     
      $$
      aN ^ 2
      $$
-
+   
    - 忽略高阶项的系数
+     
      $$
      N ^ 2
      $$
 
-7. 最终 **选择排序** 的 **时间复杂度** 为
+6. 最终 **选择排序** 的 **时间复杂度** 为
+   
    $$
    O(N ^ 2)
    $$
@@ -132,20 +136,21 @@ public static void bubbleSort(int[] arr) {
 - 从左到右依次遍历数组元素，每遍历一次，就要保证从 0 开始到当前位置是有序的
 
 - 例如：
-
+  
   - 遍历到第 1 个元素时需要和第 0 个元素进行判断，如果 arr[1] < arr[0] 就交换顺序，由于到最左边了，所以遍历下一个元素; 
-
+  
   - 第 2 元素需要和前面一个元素也就是第 1 个元素进行判断，
+    
     - 如果 arr[2] > arr[1] 就代表是有序的就可以遍历下一个元素了
     - 但如果 arr[2] < arr[1] 就交换顺序
     - 此时由于没有达到最左边，所以还需要判断 arr[2] 是否大于 arr[0]，如果小于就交换，大于就停止，遍历下一个元素
 
 > 该算法很特殊：元素的会影响遍历次数，例如 [1, 2, 3, 4] 这个数组使用遍历一次数组元素即可O(N),但选择和冒泡不同，它们不会受元素的影响依然是 O(N ^ 2)
->
+> 
 > 最好情况下时间复杂度为 O(N) 
->
+> 
 > 最坏情况下时间复杂度为 O(N ^ 2)
->
+> 
 > 但这里的算法**只考虑最坏情况**，所以该算法的时间复杂度为 o(N ^ 2) 
 
 代码：
@@ -332,8 +337,6 @@ private static int[] partition(int[] arr, int l, int r) {
 }
 ```
 
-
-
 ### 堆
 
 > 堆结构
@@ -341,7 +344,7 @@ private static int[] partition(int[] arr, int l, int r) {
 - 从逻辑上可以理解为堆是一颗 **完全二叉树**(不懂得可以百度下，很简单理解di)
 
 - 可以用一个数组连续的 heapSize 个元素表示堆(完全二叉树)
-
+  
   ```
   在这连续的 heapSize 个元素中，每个元素都满足一下规律
   父元素   == i / 2 - 1
@@ -350,16 +353,16 @@ private static int[] partition(int[] arr, int l, int r) {
   ```
 
 - 分类
-
+  
   - 大根堆：在完全二叉树种，以 任意一个节点 作为 头节点 都是 **对应子树的最大值**
   - 小根堆：在完全二叉树种，以 任意一个节点 作为 头节点 都是 **对应子树的最小值**
 
 > 堆结构相关算法的核心
 
 - `heapInsert`：将数组变成一个大根堆
-
+  
   让元素和它的父元素进行对比，如果比它大就交换到上一层去
-
+  
   ```java
   /**
   * heapInsert 调整数组中的元素，使其符合大根堆的规则
@@ -375,9 +378,9 @@ private static int[] partition(int[] arr, int l, int r) {
   ```
 
 - `heapify`: 重新调整数组结构,保证其符合堆的特点
-
+  
   从 index 开始调整子树让其符合大根堆的结构
-
+  
   ```java
   /**
   * heapIfy 从 index 开始重新调整大根堆的结构
@@ -469,7 +472,7 @@ public static void heapSort(int[] arr) {
 - 时间复杂度：O(N); 空间复杂度：O(N + m)
 
 - 特点：
-
+  
   1. 需要分割出独立的"位"来比较，而且位之间可以进行比较。
   2. 每一位的数据范围不能太大，要可以用线性排序算法来排序，否则，基数排序的时间复杂度就无法做到 O(n)。
   3. 如果排序的元素位数不一样，位数不够的可以在后面补位。
@@ -477,7 +480,7 @@ public static void heapSort(int[] arr) {
 - 主要思想：根据每个数的各个位数进行排序。先根据个位数排序，再根据十位数排序，以此类推，最后根据最高位。
 
 - 代码：
-
+  
   ```java
   /**
    * 基数排序
@@ -552,17 +555,16 @@ public static void heapSort(int[] arr) {
   }
   ```
 
-
 ### 排序算法总结
 
-|              | 时间复杂度  | 空间复杂度 | 稳定性 |
-| :----------- | :---------- | ---------- | ------ |
-| 选择排序     | O(N ^ 2)    | O(1)       | ×      |
-| 冒泡排序     | O(N ^ 2)    | O(1)       | √      |
-| 插入排序     | O(N ^ 2)    | O(1)       | √      |
-| 快速排序(v3) | O(N ^ logN) | O(logN)    | ×      |
-| 归并排序     | O(N ^ logN) | O(N)       | √      |
-| 堆排序       | O(N ^ logN) | O(1)       | ×      |
+|          | 时间复杂度       | 空间复杂度   | 稳定性 |
+|:-------- |:----------- | ------- | --- |
+| 选择排序     | O(N ^ 2)    | O(1)    | ×   |
+| 冒泡排序     | O(N ^ 2)    | O(1)    | √   |
+| 插入排序     | O(N ^ 2)    | O(1)    | √   |
+| 快速排序(v3) | O(N ^ logN) | O(logN) | ×   |
+| 归并排序     | O(N ^ logN) | O(N)    | √   |
+| 堆排序      | O(N ^ logN) | O(1)    | ×   |
 
 注意：
 
@@ -571,9 +573,9 @@ public static void heapSort(int[] arr) {
 1. 常数项时间最低的分别是 **插入排序** & **快速排序**
 
 2. 对应算法的选择需要充分利用 O(N ^ logN) 和 O(N ^ 2) 排序各自的优势
-
+   
    也可以使用综合排序，将两种算法合起来一起使用，例如在使用 快速排序 的过程中，对于一些样本数量(需要排序的数据数量)较小的情况可以使用 插入排序，因为样本数量比较小，需要算法瓶颈的可能性是很低的，而插入排序的并不需要使用额外空间复杂度且常数项时间极低
-
+   
    ```java
    public static void quickerSort(int[] arr, int l, int r) {
        if (l < r) {
@@ -597,7 +599,7 @@ public static void heapSort(int[] arr) {
        }
    }
    ```
-
+   
    在整个数组的排序调度上依然使用快速排序，但在递归一些样本量较小的数据时就可以使用快速排序，减小空间复杂度且影响不大
 
 3. 对应的基础类型的数据可以不考虑稳定性，但对于其他类型就需要根据业务情况而定
@@ -609,7 +611,7 @@ public static void heapSort(int[] arr) {
 - 如果只有 key，没有伴随数据 value，可以使用 HashSet 结构
 
 - 如果既有 key，又有伴随数据 value，可以使用 HashMap 结构
-
+  
   注意：HashMap 和 HashSet 唯一的区别就在于是否有伴随数据，底层结构是一样的
 
 - 哈希表的 crud 操作可以任务**时间复杂度都是 O(1)**，但是常数时间比较大
@@ -623,9 +625,9 @@ public static void heapSort(int[] arr) {
 - 在使用层面上可以理解为一种集合结构
 
 - 如果只有 key，没有伴随数据 value，可以使用 TreeSet 结构
-
+  
   如果既有 key，又有伴随数据 value，可以使用 TreeMap 结构
-
+  
   注意：TreeSet 和 TreeMap 的唯一区别在于是否有伴随数据，底层结构是一样的
 
 - 有序表和哈希表的区别在于，有序表会把 key 按照顺序组织起来，而哈希表不组织
@@ -637,7 +639,7 @@ public static void heapSort(int[] arr) {
 - 放入有序表的数据，如果不是基础类型，就必须提供比较器，内部按引用传递，内存占用就是这个东西的内存地址
 
 - 只要是有序表，都有一下固定的基本操作和固定的 **时间复杂度 O(logN)**
-
+  
   ![image-20220326132335544](README.assets/image-20220326132335544.png)
 
 ### 二叉树
@@ -940,7 +942,7 @@ public static boolean isBST(TreeNode head) {
         }
     }
     return true;
-    
+
 }
 ```
 
@@ -1000,10 +1002,10 @@ private static class BSTInfo {
 ```java
 /**
 * 判断一颗树是否为完全二叉树(若设二叉树的深度为k，除第 k 层外，其它各层 (1～k-1) 的结点数都达到最大个数，第k 层所有的结点都连续集中在最左边，这就是完全二叉树。)
-* 	可能出现的情况：
-* 		1. 当一个节点的 left == null && right != null 则就不是完全二叉树
-* 		2. 节点要么是叶子节点，要么 (left & right) != null，要么 left != null && right == null
-* 		3. 当出现了 叶子节点或只有一个子节点的节点时 之后的所有节点只能是叶子节点
+*     可能出现的情况：
+*         1. 当一个节点的 left == null && right != null 则就不是完全二叉树
+*         2. 节点要么是叶子节点，要么 (left & right) != null，要么 left != null && right == null
+*         3. 当出现了 叶子节点或只有一个子节点的节点时 之后的所有节点只能是叶子节点
 * @param head
 * @return
 */
@@ -1118,6 +1120,406 @@ private static class BBTInfo {
 }
 ```
 
+### 图
+
+> 可以描述图的数据结构是非常多的，对于不同的算法题目也可能会给不同的数据结构，那么我们可以自己定义一个**图的模板**，当我们遇到一些表示图的数据结构时，我们只用将其转换为自己的模板,然后再写相关逻辑就会方便很多
+
+> 这里是使用的 dalao 已经写好的模板，可以自行补充
+
+```java
+/**
+ * 图结构中表示边的类
+ * @author 小丶木曾义仲丶哈牛柚子露丶蛋卷
+ * @version 1.0
+ * @date 2022/4/21 9:35
+ */
+public class Edge {
+
+    /**
+     * 权重
+     */
+    public int weight;
+
+    /**
+     * 入点
+     */
+    public Node form;
+
+    /**
+     * 出点
+     */
+    public Node to;
+
+    public Edge(int weight, Node form, Node to) {
+        this.weight = weight;
+        this.form = form;
+        this.to = to;
+    }
+}
+```
+
+```java
+/**
+ * 图结构中表示节点的类
+ * @author 小丶木曾义仲丶哈牛柚子露丶蛋卷
+ * @version 1.0
+ * @date 2022/4/21 9:30
+ */
+public class Node {
+
+    /**
+     * 节点的值
+     */
+    public int value;
+
+    /**
+     * 节点的入度
+     */
+    public int in;
+
+    /**
+     * 节点的出度
+     */
+    public int out;
+
+    /**
+     * 由当前节点发散的边所能指向的节点
+     */
+    public ArrayList<Node> nexts;
+
+    /**
+     * 由当前节点发散的边
+     */
+    public ArrayList<Edge> edges;
+
+    public Node(int value) {
+        this.value = value;
+        in = 0;
+        out = 0;
+        nexts = new ArrayList<>();
+        edges = new ArrayList<>();
+    }
+}
+```
+
+```java
+public class Graph {
+
+    public HashMap<Integer, Node> nodes;
+
+    public HashSet<Integer> edges;
+
+    public Graph() {
+        nodes = new HashMap<>();
+        edges = new HashSet<>();
+    }
+}
+```
+
+> (算法1) 图的宽度优先遍历
+
+```java
+/**
+* 图的宽度优先遍历
+* @param node
+*/
+public void exec1(Node node){
+    // 使用队列辅助完成
+    Queue<Node> queue = new LinkedList<>();
+    // 使用 set 集合去重
+    HashSet<Node> set = new HashSet<>();
+    queue.add(node);
+    set.add(node);
+    while (!queue.isEmpty()) {
+        Node node1 = queue.poll();
+
+        /*
+        * 在进行图的宽度优先遍历时对数据的操作
+        * */
+        System.out.println(node1.value);
+
+        for (Node next : node1.nexts) {
+            // 如果 set 集合中还没有 next 节点，就表示它还没有遍历过，就加入到队列中
+            if (!set.contains(next)) {
+                queue.add(next);
+                set.add(next);
+            }
+        }
+    }
+}
+```
+
+> (算法2) 图的广度优先遍历
+
+```java
+public void exec2(Node node) {
+    Stack<Node> nodeStack = new Stack<>();
+    // 去重
+    HashSet<Node> set = new HashSet<>();
+    nodeStack.push(node);
+    set.add(node);
+    while (!nodeStack.isEmpty()) {
+        Node node1 = nodeStack.pop();
+        System.out.println(node1.value);
+        for (Node next : node1.nexts) {
+            if (!set.contains(next)) {
+                nodeStack.push(next);
+                set.add(next);
+            }
+        }
+    }
+} 
+```
+
+> (算法3) 拓扑排序算法
+
+```java
+/**
+* 拓扑排序:
+*  - 要求有向图，且有入度为 0 的节点，并且没有环
+*  - 说明：在开发的实际过程中，如果我们引用了很多 Maven 依赖，
+*         那么如何确定依赖打包的顺序(避免依赖循环)，就是拓扑排序所需要解答的
+*  - 思路：先找到入度为 0 的节点(不依赖其他依赖)，
+*         然后将其 nexts(需要依赖当前节点的依赖) 的入度 -1(表示它需要的依赖已经搞定一个)
+*         依次类推，直到没有入度为 0 的节点
+* @param graph
+*/
+public ArrayList<Node> exec3(Graph graph) {
+    // 只有入度为 0 的节点才能进入的队列
+    Queue<Node> zeroInQueue = new LinkedList<>();
+    // 统计所有节点的入度信息
+    HashMap<Node, Integer> nodeInMap = new HashMap<>();
+    for (Node node : graph.nodes.values()) {
+        nodeInMap.put(node, node.in);
+        if (node.in == 0) {
+            zeroInQueue.add(node);
+        }
+    }
+    ArrayList<Node> result = new ArrayList<>();
+    while (!zeroInQueue.isEmpty()) {
+        Node pollNode = zeroInQueue.poll();
+        result.add(pollNode);
+        for (Node next : pollNode.nexts) {
+            nodeInMap.put(next, nodeInMap.get(next) - 1);
+            if (nodeInMap.get(next) == 0) {
+                zeroInQueue.add(next);
+            }
+        }
+    }
+    return result;
+}
+```
+
+> 生成最小生成树：
+
+- `kruskal` 算法(要求无向图)
+
+  - 需要依赖于**并查集**结构
+
+    ```java
+    /**
+    * 一个简单版本的"并查集"结构
+    *  主要功能：
+    *      1) 合并：提供两个不交集(Disjoint sets，一系列没有重复元素的集合)的合并
+    *      2) 查询：查询两个元素是否在一个集合内
+    */
+    public static class UnionFind {
+    
+        public HashMap<Node, List<Node>> setMap;
+    
+        public UnionFind(List<Node> nodes) {
+            for (Node node : nodes) {
+                ArrayList<Node> nodeList = new ArrayList<>();
+                nodeList.add(node);
+                setMap.put(node, nodeList);
+            }
+        }
+    
+        /**
+        * 查询两个节点是否在一个集合内
+        * @param node1
+        * @param node2
+        * @return
+        */
+        public boolean isSameSet(Node node1, Node node2) {
+            return setMap.get(node1) == setMap.get(node2);
+        }
+    
+        /**
+        * 合并两个集合
+        * @param node1
+        * @param node2
+        */
+        public void unionSet(Node node1, Node node2) {
+            List<Node> node1List = setMap.get(node1);
+            List<Node> node2List = setMap.get(node2);
+            for (Node node : node2List) {
+                node1List.add(node);
+                setMap.put(node, node1List);
+            }
+        }
+    }
+    ```
+
+  - 主要思路：
+
+    - 每个节点都对应一个集合，这个集合表示与该节点连通的节点集合
+
+    - 将所有的边进行一个排序，从最小的边开始，判断 `form` & `to` 是否在一个集合内，如果不在，就将它们放在一个集合内
+
+    - 如果一个边可以将 form/to 节点放到集合内，那么这个边就是最小生成树中的一个边
+
+  - 代码实现：
+
+    ```java
+    /**
+    * 最小生成树 - k 算法
+    * @param graph
+    * @return
+    */
+    public List<Edge> kruskal(Graph graph) {
+        UnionFind unionFind = new UnionFind(graph.nodes.values());
+        // 使用小根堆来辅助排序
+        PriorityQueue<Edge> priorityQueue = new PriorityQueue<>(new EdgeComparator());
+        priorityQueue.addAll(graph.edges);
+        ArrayList<Edge> result = new ArrayList<>();
+        while (!priorityQueue.isEmpty()) {
+            Edge edge = priorityQueue.poll();
+            // 如果 edge 的 form/to 不在最小生成树对应的集合内，就它们加进去
+            if (!unionFind.isSameSet(edge.form, edge.to)) {
+                unionFind.unionSet(edge.form, edge.to);
+                result.add(edge);
+            }
+        }
+        return result;
+    }
+    
+    private class EdgeComparator implements Comparator<Edge>{
+        @Override
+        public int compare(Edge o1, Edge o2) {
+            return o1.weight - o2.weight;
+        }
+    }
+    ```
+
+- `prim` 算法(要求无向图)
+
+  - 主要思路：
+  
+    - 从任意一个节点出发，通过其属性 `edges` 获取它所有的相关的**边**，将边加入到**小根堆队列**中
+  
+    - 获取小根堆队列的堆顶，可以得到一个 `weight` 最小的边，根据其属性 `to` 可以访问到下一个节点 `next`
+  
+      如果当前节点没有在**最小生成树**中，那么把**它和刚刚找到的边**加入到最小生成树中
+  
+    - 将下一个 `next` 节点的 `edges` 属性保存到**小根堆队列**中
+  
+  - 代码实现
+  
+    ```java
+    /**
+    * 最小生成树 - p 算法
+    *
+    * @param graph
+    * @return
+    */
+    public List<Edge> prim(Graph graph) {
+        // 去重集合
+        HashSet<Node> set = new HashSet<>();
+        // 小根堆
+        PriorityQueue<Edge> queue = new PriorityQueue<>(new EdgeComparator());
+        // 最小生成树的边
+        ArrayList<Edge> result = new ArrayList<>();
+    
+        for (Node node : graph.nodes.values()) {
+            queue.addAll(node.edges);
+            set.add(node);
+            while (!queue.isEmpty()) {
+                Edge edge = queue.poll();
+                Node next = edge.to;
+                if (!set.contains(next)) {
+                    set.add(next);
+                    queue.addAll(next.edges);
+                    result.add(edge);
+                }
+            }
+    
+        }
+    
+        return result;
+    }
+    ```
+  
+
+> 迪杰斯特拉：(适用范围：不能有累加和为负数的环)
+
+- 主要思路：
+
+  1. 迪杰斯特拉的目标是为了求 **从一个点出发到图上任意点的最短路径**
+  2. 可以使用一个哈希表来记录 `head` 节点到图上所有节点的距离(包括自己，且距离为 0)
+  3. 从哈希表中找到一个当前距离最小的**节点 B**，然后访问它的 `edges` 属性获得 距离(weight) & 到达的节点(to)
+  4. 判断 **哈希表.get(to)** VS **哈希表.get(节点B) + weight** 谁小，就用谁 哈希表.put(to, 小距离)
+  5. 锁定节点B，然后再进行第 3 步(被锁定的节点一定要不会被找到)
+
+- 代码实现
+
+  ```java
+  /**
+  * 迪杰斯特拉
+  * @param head
+  * @return
+  */
+  public HashMap<Node, Integer> dijkstra(Node head) {
+      // 设置一个哈希表，复杂记录 head 节点到每个节点的最短距离
+      HashMap<Node, Integer> distanceMap = new HashMap<>();
+      // 当然了，包括到自己的距离(呲牙.jpg)
+      distanceMap.put(head, 0);
+      // 设置一个可以用来保存被锁定的节点的结构
+      HashSet<Node> selectNodes = new HashSet<>();
+      // 找到 distanceMap 结构中距离最小且没有被锁定的节点
+      Node minNode = getMinDistanceAndNuSelectedNode(distanceMap, selectNodes);
+      while (minNode != null) {
+          int distance = distanceMap.get(minNode);
+          for (Edge edge : minNode.edges) {
+              Node to = edge.to;
+              int weight = edge.weight;
+              // 如果距离表中没有该节点，那么直接新增即可
+              if (!distanceMap.containsKey(to)) {
+                  distanceMap.put(to, distance + weight);
+              } else {
+                  distanceMap.put(to, Math.min(distanceMap.get(to), distance + weight));
+              }
+          }
+          // 锁定当前节点
+          selectNodes.add(minNode);
+          // 重新找
+          minNode = getMinDistanceAndNuSelectedNode(distanceMap, selectNodes);
+      }
+      return distanceMap;
+  }
+  
+  /**
+  * 找到 distanceMap 结构中距离最小且没有被锁定的节点
+  * @param distanceMap
+  * @param selectNodes
+  * @return
+  */
+  private Node getMinDistanceAndNuSelectedNode(HashMap<Node, Integer> distanceMap,
+                                               HashSet<Node> selectNodes) {
+      Node minNode = null;
+      int minValue = Integer.MAX_VALUE;
+      for (Map.Entry<Node, Integer> nodeIntegerEntry : distanceMap.entrySet()) {
+          Node node = nodeIntegerEntry.getKey();
+          Integer distance = nodeIntegerEntry.getValue();
+          if (!selectNodes.contains(node) && minValue > distance) {
+              minNode = node;
+              minValue = distance;
+          }
+      }
+      return minNode;
+  }
+  ```
+
 ## 解题技巧
 
 ### 异或运算的性质与扩展
@@ -1129,7 +1531,7 @@ private static class BBTInfo {
 - 满足交换律和结合律
 
 - 可以不用额外变量交换两个数(交换的两个数据不能是内存地址相同的，否则两个数据都会变成 0)
-
+  
   ```java
   arr[i] = arr[i] ^ arr[j]; // a = a^b; b=b
   arr[j] = arr[i] ^ arr[j]; // a = a^b; b = a^b^b => a ^ 0 = a
@@ -1225,11 +1627,11 @@ public class Comparators implements Comparator<Integer> {
 ### 求中位数
 
 - 一般的写法：mid = (l + r) / 2
-
+  
   - 存在问题：l + r 可能会导致 **整型溢出**，当然了也只有 R / L 特别的情况下才有可能发现
 
 - 更好的写法: mid = l + ((r - l) / 2)
-
+  
   因为用的是减法，不会导致 **整型溢出**
 
 - 究极简化版：mid = l + ((r - l) >> 1)
@@ -1249,7 +1651,7 @@ public class Comparators implements Comparator<Integer> {
 #### 回环链表求出回环点
 
 > 规律：在回环链表上使用快慢索引，当快慢索引第一次相遇时，让快索引回到 head 节点，慢索引不动
->
+> 
 > 然后和慢索引同时移动，每次移动一步，当两个节点再次相遇时，就是回环节点
 
 ```java
@@ -1285,4 +1687,3 @@ private static Node isLoop(Node head) {
     return idx1;
 }
 ```
-
