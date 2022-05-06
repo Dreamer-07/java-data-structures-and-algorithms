@@ -1519,8 +1519,214 @@ public ArrayList<Node> exec3(Graph graph) {
       return minNode;
   }
   ```
+  
+- 改写堆结构
 
-## 解题技巧
+  ```java
+  ```
+
+  
+
+### 前缀树
+
+概念：也称为字典树/单词查找树/键树，是一种树型结构；典型应用是用于统计和排序大量的字符串（但不仅限于字符串），所以经常被搜索引擎系统用于文本词频统计。它的优点是：利用字符串的公共前缀来减少查询时间，最大限度地减少无谓的字符串比较。
+
+
+
+```json
+yu: {
+    hou: {
+        
+    }
+    qian: {
+        
+    }
+}
+```
+
+
+
+
+
+实现：
+
+```java
+public class TireNode {
+
+    /**
+     * 以当前节点为前缀的节点个数
+     */
+    public int pass;
+
+    /**
+     * 以当前节点为结尾的节点个数
+     */
+    public int end;
+
+    /**
+     * 当前的节点连接的节点
+     *  - 这里的用数组是因为数据量小
+     *  - 如果实战中使用，可以用 HashMap<Char, TireNode>
+     */
+    public TireNode[] nodes;
+
+    public TireNode() {
+        pass = 0;
+        end = 0;
+        //  这里的学习是以 26 个字母组成的字符串为例的，所以用一个拥有 26 个位置的数组来存储
+        nodes = new TireNode[26];
+    }
+}
+```
+
+```java
+public class Tire {
+
+    private TireNode root;
+
+    public Tire() {
+        this.root = new TireNode();
+    }
+
+    /**
+     * 将字符串插入到前缀树中
+     *
+     * @param str
+     */
+    private void insert(String str) {
+        // 获取字符数组
+        char[] chars = str.toCharArray();
+        root.pass++;
+        TireNode temp = root;
+        for (int i = 0; i < chars.length; i++) {
+            // 通过 字符相减规律 可以得到当前字符在数组中 index(a=0, b=1....z=25)
+            int index = chars[i] - 'a';
+            if (temp.nodes[index] == null) {
+                temp.nodes[index] = new TireNode();
+            }
+            // 经过当前字符的节点数量++
+            temp.nodes[index].pass++;
+            // 下移到当前字符的节点
+            temp = temp.nodes[index];
+        }
+        // 以当前字符的节点作为结尾的个数++
+        temp.end++;
+    }
+
+    /**
+     * 查询字符串在前缀树中出现的次数
+     *
+     * @param str
+     * @return
+     */
+    private int search(String str) {
+        if (str == null) {
+            return 0;
+        }
+        // 获取字符数组
+        char[] chars = str.toCharArray();
+        TireNode temp = root;
+        for (int i = 0; i < chars.length; i++) {
+            int index = chars[i] - 'a';
+            // 字符串还未遍历完，已经没有对应的字符节点了，代表该字符不存在于前缀树中，直接返回0
+            if (temp.nodes[index] == null) {
+                return 0;
+            }
+            temp = temp.nodes[index];
+        }
+        return temp.end;
+    }
+
+    /**
+     * 删除前缀树中的某个字符串
+     *
+     * @param str
+     */
+    private void delete(String str) {
+        // 一定要保证该字符串是存在于树中的
+        if (search(str) != 0) {
+            char[] chars = str.toCharArray();
+            TireNode temp = root;
+            for (int i = 0; i < chars.length; i++) {
+                int index = chars[i] - 'a';
+                if (--temp.nodes[index].pass == 0) {
+                    // 如果当前字符节点已经没有经过的字符了，就直接置空即可
+                    temp.nodes[index] = null;
+                    return;
+                }
+                temp = temp.nodes[index];
+            }
+            temp.end--;
+        }
+    }
+
+    /**
+     * 查找以指定字符作为前缀的字符串数据个数
+     *
+     * @param str
+     * @return
+     */
+    private int prefixNumber(String str) {
+        if (str == null) {
+            return 0;
+        }
+        char[] chars = str.toCharArray();
+        TireNode temp = root;
+        for (int i = 0; i < chars.length; i++) {
+            int index = chars[i] - 'a';
+            // 字符串还未遍历完，已经没有对应的字符节点了，代表该字符不存在于前缀树中，直接返回0
+            if (temp.nodes[index] == null) {
+                return 0;
+            }
+            temp = temp.nodes[index];
+        }
+        return temp.pass;
+    }
+
+}
+```
+
+### 贪心算法
+
+**概念**：
+
+在对问题求解时，总是做出在**当前看来**是最好的选择。即不从整体最优上加以考虑，算法得到的是在某种意义上的局部最优解。但一般情况下我们希望可以通过这个局部最优解得到全局的最优解
+
+**笔试解题套路**：
+
+1. 实现一个不依靠贪心策略的的解法X(可以用暴力解)
+2. 根据不同标准编写不同的贪心策略(A/B/C等)
+3. 用**解法X**和**对数器**，去验证每个贪心策略，用实验的方式得知哪个贪心策略正确
+4. **不要去纠结贪心策略的证明**(为什么按照这种策略就是最优解，不要去纠结这个，如果要求这个根据不同的业务性质需要一些数学功底)
+
+**经常使用的技巧**：
+
+1. 根据某标准建立一个比较器来排序
+2. 根据某标准建立一个比较器来组成堆
+
+**例题：**
+
+> 会议问题：有n个项目和1个会议室，会议室最多只能给1个项目使用，且每个项目都有自己宣讲开始和结束的时间，在规定时间内(例如早上6点到晚上6点)，由你来安排，要求**会议室进行宣讲的场次最多**
+
+思路：
+
+- 先列出大概有什么策略(按谁先开始从小到大/按持续时间从小到大/按结束时间从小到大等等)
+- 然后看看能不能找出以上策略的反例
+  1. 按谁先开始从小到大-有一个项目从早上6点开到晚上6点，寄
+  2. 按持续时间从小到大-有3个项目：[{6:00 ~ 12:00}, {11:00 ~ 13:00}, {12:00 ~ 18:00}]，这样只能讲中间这1个，寄
+  3. 按结束时间从小到大-好像没有
+- 那我们就以 **按结束时间从小到大** 进行编码
+
+实现：
+
+```java
+```
+
+### 暴力递归
+
+
+
+## 解题技巧 
 
 ### 异或运算的性质与扩展
 
@@ -1552,8 +1758,8 @@ public ArrayList<Node> exec3(Graph graph) {
 //生成一个随机的但是可控的数组
 public static int[] generateRandomArray(int size, int value)
 {
-    //Math.random() -> double [0,1)
-    //(int) ((size + 1) * Math.random()) -> [0,size]整数
+    // Math.random() -> double [0,1)
+    // (int) ((size + 1) * Math.random()) -> [0,size]整数
     // 生成长度随机[0, size]的数组
     int[] arr = new int[(int) ((size+1) * Math.random())];
     for (int i = 0; i < arr.length; i++)
