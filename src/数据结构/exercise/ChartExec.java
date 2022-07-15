@@ -222,6 +222,7 @@ public class ChartExec {
 
     /**
      * 迪杰斯特拉
+     *
      * @param head
      * @return
      */
@@ -256,6 +257,7 @@ public class ChartExec {
 
     /**
      * 找到 distanceMap 结构中距离最小且没有被锁定的节点
+     *
      * @param distanceMap
      * @param selectNodes
      * @return
@@ -273,5 +275,158 @@ public class ChartExec {
             }
         }
         return minNode;
+    }
+
+    /**
+     * ================迪杰斯特拉2 - 改写堆结构=================
+     */
+    public HashMap<Node, Integer> dijkstra(Node head, int heapSize) {
+        // 创建一个堆
+        Heap heap = new Heap(heapSize);
+        // 像堆内添加数据
+        heap.addOrUpdate(head, 0);
+        HashMap<Node, Integer> resultMap = new HashMap<>();
+        // 如果堆不为空
+        while (!heap.isEmpty()) {
+            // 获取堆顶的节点
+            HeapNode heapNode = heap.pop();
+            // 获取保存的图节点信息
+            Node node = heapNode.getNode();
+            // 获取从 head 节点出发到 当前节点(heapNode.getNode) 的距离
+            Integer distance = heapNode.getDistance();
+            for (Edge edge : node.edges) {
+                heap.addOrUpdate(edge.to, distance + edge.weight);
+            }
+            resultMap.put(node, distance);
+        }
+        return resultMap;
+    }
+
+    private static class Heap {
+        private Node[] nodes;
+        private HashMap<Node, Integer> indexMap;
+        private HashMap<Node, Integer> distanceMap;
+        private int heapSize;
+
+        public Heap(int nodeSize) {
+            this.nodes = new Node[nodeSize];
+            this.indexMap = new HashMap<>(nodeSize);
+            this.distanceMap = new HashMap<>(nodeSize);
+            this.heapSize = 0;
+        }
+
+        public void addOrUpdate(Node node, int distance) {
+            // 判断 head 节点是否已经计算过最短路径
+            if (!isCalculated(node)) {
+                // 没有计算过，就修改堆节点数据
+                distanceMap.put(node, Math.min(distanceMap.get(node), distance));
+                // heapInsert
+                heapInsert(indexMap.get(node));
+            }
+            // 判断 head 节点是否在堆里
+            if (!isExistHeap(node)) {
+                // 保存到堆中
+                nodes[heapSize] = node;
+                indexMap.put(node, heapSize);
+                distanceMap.put(node, distance);
+                // heapInsert
+                heapInsert(heapSize++);
+            }
+        }
+
+        private void swap(int index1, int index2) {
+            indexMap.put(nodes[index1], index2);
+            indexMap.put(nodes[index2], index1);
+            Node temp = nodes[index1];
+            nodes[index1] = nodes[index2];
+            nodes[index2] = temp;
+        }
+
+        private boolean isExistHeap(Node node) {
+            return indexMap.containsKey(node);
+        }
+
+        private boolean isCalculated(Node node) {
+            return isExistHeap(node) && indexMap.get(node) == -1;
+        }
+
+        public boolean isEmpty() {
+            return heapSize == 0;
+        }
+
+        public HeapNode pop() {
+            // 得到堆顶数据
+            Node node = nodes[0];
+            Integer distance = distanceMap.get(node);
+            // 交换堆顶和堆底元素
+            swap(0, heapSize - 1);
+
+            // 删除记录
+            distanceMap.remove(node);
+            // 标记该节点已经计算过最短路径
+            indexMap.put(node, -1);
+            // 在数组中删除该元素(同时修改堆的大小)
+            nodes[--heapSize] = null;
+
+            // 调整堆结构
+            heapIfy(0);
+            return new HeapNode(node, distance);
+        }
+
+        /**
+         * 从下往上调整堆
+         * @param index
+         */
+        private void heapInsert(Integer index) {
+            while (distanceMap.get(nodes[index]) < distanceMap.get(nodes[(index - 1) / 2])) {
+                swap(index, (index - 1) / 2);
+                index = (index - 1) / 2;
+            }
+        }
+
+        /**
+         * 从上往下调整堆
+         * @param index
+         */
+        private void heapIfy(int index) {
+            int left = index * 2 + 1;
+            while (left < heapSize) {
+                int smallest = left + 1 < heapSize
+                               &&
+                               distanceMap.get(nodes[left]) < distanceMap.get(nodes[left + 1]) ? left : left + 1;
+                if (distanceMap.get(nodes[index]) <= smallest) {
+                    break;
+                }
+                swap(index, smallest);
+                index = smallest;
+                left = index * 2 + 1;
+            }
+        }
+    }
+
+    private static class HeapNode {
+        private Node node;
+        private Integer distance;
+
+        public HeapNode(Node node, Integer distance) {
+            this.node = node;
+            this.distance = distance;
+        }
+
+        public Node getNode() {
+            return node;
+        }
+
+        public void setNode(Node node) {
+            this.node = node;
+        }
+
+        public Integer getDistance() {
+            return distance;
+        }
+
+        public void setDistance(Integer distance) {
+            this.distance = distance;
+        }
     }
 }

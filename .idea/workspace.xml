@@ -4,6 +4,7 @@
     <list default="true" id="aa872405-a78f-4ba5-8acd-87464480bc9f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/exercise/ChartExec.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/exercise/ChartExec.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +88,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -98,30 +99,23 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.completion" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="exercise" />
     </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\StudyCode\java-data-structures-and-algorithms\src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\StudyCode\java-data-structures-and-algorithms\src" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="exercise" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.BinaryTreeExec">
-    <configuration name="BinaryTree" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="algorithm.BinaryTree" />
-      <module name="java-data-structures-and-algorithms" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="exercise.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.Demo3">
     <configuration name="BinaryTreeDpExec" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="exercise.BinaryTreeDpExec" />
       <module name="java-data-structures-and-algorithms" />
@@ -148,12 +142,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="LinkList" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="exercise.LinkList" />
+    <configuration name="Demo1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="algorithm.c_violence.Demo1" />
       <module name="java-data-structures-and-algorithms" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="exercise.*" />
+          <option name="PATTERN" value="algorithm.c_violence.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -161,26 +155,52 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SortAlgorithm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="algorithm.SortAlgorithm" />
+    <configuration name="Demo2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="algorithm.c_violence.Demo2" />
       <module name="java-data-structures-and-algorithms" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="exercise.*" />
+          <option name="PATTERN" value="algorithm.c_violence.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Demo3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="algorithm.c_violence.Demo3" />
+      <module name="java-data-structures-and-algorithms" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="algorithm.c_violence.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Demo3" />
+        <item itemvalue="Application.Demo2" />
+        <item itemvalue="Application.Demo1" />
         <item itemvalue="Application.BinaryTreeExec" />
         <item itemvalue="Application.BinaryTreeDpExec" />
-        <item itemvalue="Application.BinaryTree" />
-        <item itemvalue="Application.LinkList" />
-        <item itemvalue="Application.SortAlgorithm" />
       </list>
     </recent_temporary>
   </component>
@@ -234,6 +254,20 @@
       <workItem from="1651149370909" duration="3130000" />
       <workItem from="1651188621448" duration="4967000" />
       <workItem from="1651199968564" duration="5000" />
+      <workItem from="1651880575194" duration="6778000" />
+      <workItem from="1651933532641" duration="1216000" />
+      <workItem from="1652372661495" duration="5599000" />
+      <workItem from="1652425387712" duration="38000" />
+      <workItem from="1652625418787" duration="1000" />
+      <workItem from="1652625456309" duration="12000" />
+      <workItem from="1653007067778" duration="1561000" />
+      <workItem from="1653008674390" duration="452000" />
+      <workItem from="1653009187822" duration="8000" />
+      <workItem from="1653012257362" duration="5000" />
+      <workItem from="1655866627952" duration="1249000" />
+      <workItem from="1656667746441" duration="3646000" />
+      <workItem from="1657881887568" duration="25000" />
+      <workItem from="1657881970855" duration="2860000" />
     </task>
     <task id="LOCAL-00001" summary="总结六大排序算法和一些常见的坑">
       <created>1648267450679</created>
@@ -249,7 +283,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650674351042</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="学习贪心算法和前缀树">
+      <created>1651880604038</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1651880604038</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -311,7 +352,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="总结六大排序算法和一些常见的坑" />
     <MESSAGE value="学习图的解题技巧和相关练习" />
-    <option name="LAST_COMMIT_MESSAGE" value="学习图的解题技巧和相关练习" />
+    <MESSAGE value="学习贪心算法和前缀树" />
+    <option name="LAST_COMMIT_MESSAGE" value="学习贪心算法和前缀树" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
